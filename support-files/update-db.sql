@@ -1,0 +1,1 @@
+update core_config_data set value='elasticsearch' where path like 'catalog/search/elasticsearch7_server_hostname';

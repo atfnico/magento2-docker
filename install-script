@@ -1,0 +1,125 @@
+#!/bin/bash
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+   # Display Help
+   echo
+   echo "Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}"
+   echo
+}
+
+############################################################
+############################################################
+# Main program                                             #
+############################################################
+############################################################
+############################################################
+# Process the input options. Add options as needed.        #
+############################################################
+# Get the options
+while getopts ":h" option; do
+    case $option in
+      h) # display Help
+        Help
+        exit;;
+    esac
+done
+
+if [ "$#" -ne 7 ]; then
+    Help
+else
+    PROJECT=$1
+    DOMAIN=$2
+    BITBUCKET_USER=$3
+    PHP_VERSION=$4
+    GIT_BRANCH=$5
+    ENV_FILE=$6
+    DB_FILE=$7
+
+    echo "Creating project directory in" ~/sites/$PROJECT "..."
+    echo
+    rm -rf ~/sites/$PROJECT/* && rm -rf ~/sites/$PROJECT/
+    mkdir -p ~/sites/$PROJECT
+
+    echo "Moving to project directory in" ~/sites/$PROJECT "..."
+    echo
+    cd ~/sites/$PROJECT
+    curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash
+
+    cp -R ~/sites/docker-magento/support-files/images ~/sites/$PROJECT/
+    cp ~/sites/docker-magento/support-files/docker-compose.yml ~/sites/$PROJECT/
+    sed -i -e "s/PHP_VERSION/$PHP_VERSION/g" ~/sites/$PROJECT/docker-compose.yml
+
+    echo "Git cloning from bitbucket repo..."
+    echo
+    git clone https://$BITBUCKET_USER@bitbucket.org/abovethefray/$PROJECT.git src
+
+    echo "Start some containers..."
+    bin/stopall
+    bin/removeall
+    docker-compose -f docker-compose.yml up -d --remove-orphans
+
+    echo "Verify git and switch to the branch you need to work"
+    cd ~/sites/$PROJECT/src/
+    git checkout $GIT_BRANCH -f
+    # show current branch
+    git name-rev --name-only HEAD
+    cd ~/sites/$PROJECT
+
+    echo "Copy env file..."
+    mkdir -p src/app/etc/ && cp $ENV_FILE src/app/etc
+
+    echo "Copy files downloaded from repo, host to container..."
+    bin/copytocontainer --all
+
+    echo "Composer installing..."
+    bin/composer install -v
+
+    echo "Copying files from container to host after composer install..."
+    bin/copyfromcontainer --all
+
+    echo "Create a DNS host entry and setup Magento base url..."
+    if ! grep -q "$DOMAIN" /etc/hosts; then
+        echo "Your system password is needed to add an entry to /etc/hosts..."
+        echo "127.0.0.1 ::1 $DOMAIN" | sudo tee -a /etc/hosts
+    fi
+
+    echo "Generating SSL certificate..."
+    bin/setup-ssl "$DOMAIN"
+
+    echo "Import the db to docker instance..."
+    bin/mysql < $DB_FILE
+
+    echo "Import app-specific environment settings..."
+    bin/clinotty bin/magento app:config:import
+
+    echo "Update elasticsearch configuration saved from the db - core_config_data..."
+    bin/mysql < ~/sites/docker-magento/support-files/update-db.sql
+
+    echo "Set https://${DOMAIN}/ to web/secure/base_url and web/secure/base_url"
+    bin/clinotty bin/magento config:set web/secure/base_url https://"$DOMAIN"/
+    bin/clinotty bin/magento config:set web/unsecure/base_url https://"$DOMAIN"/
+
+    echo "Run Magento CLI commands..."
+    bin/clinotty rm -rf generated/code/*
+    bin/clinotty bin/magento setup:upgrade
+    bin/clinotty bin/magento setup:di:compile
+    bin/clinotty bin/magento setup:static-content:deploy -f -j 10
+
+    echo "Re-indexing with Elasticsearch..."
+    bin/clinotty bin/magento indexer:reindex
+
+    echo "Clearing the cache to apply updates"
+    bin/clinotty bin/magento cache:flush
+
+    echo "Turning on developer mode"
+    bin/clinotty bin/magento deploy:mode:set developer
+
+    mv .vscode src/
+
+    echo "Docker development environment setup complete."
+    echo "You may now access your Magento instance at https://$DOMAIN/"
+fi
