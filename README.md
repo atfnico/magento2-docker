@@ -1,3 +1,6 @@
+## Intro
+Before setting up a Magento 2 development environment with Docker, make sure that the only running tool or dev software on your local is Docker. As it will have conflicts on the ports with other environment like Homebrew, XAMPP, etc.
+
 ## Setup
 #### Automated Setup (New Project)
 
