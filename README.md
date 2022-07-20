@@ -1,4 +1,5 @@
-#### New Projects
+## Setup
+#### Automated Setup (New Project)
 
 ```bash
 # Create your project directory then go into it:
@@ -24,29 +25,37 @@ bin/setup magento.test
 open https://magento.test
 ```
 
-#### Existing Projects
+#### Automated Setup (Existing Project)
 
 ```bash
-# Take a backup of your existing database:
-bin/mysqldump > ~/Sites/existing/magento.sql
+# Download the magento2-docker from the below git repo 
+# https://github.com/atfnico/magento2-docker
+cd ~/sites
+git clone https://github.com/atfnico/magento2-docker.git
 
-# Download the Docker Compose template:
-curl -s https://raw.githubusercontent.com/atfjason/magento2-docker/master/lib/installscript | bash
+# Run ATF Docker automated script
+# To see the syntax for help, run:
+~/sites/docker-magento/install-script -h
 
-# Import existing database:
-bin/mysql < ../existing/magento.sql
-
-# Update database connection details to use the above Docker MySQL credentials:
-# Also note: creds for the MySQL server are defined at startup from env/db.env
-# vi src/app/etc/env.php
-
-# Import app-specific environment settings:
-bin/magento app:config:import
-
-# Create a DNS host entry and setup Magento base url
-bin/setup-domain yoursite.test
-
-bin/restart
-
-open https://yoursite.test
+# Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}
+~/sites/docker-magento/install-script crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
 ```
+
+#### Sample Project Total Execution Time
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/sample-project-ddi.png" alt="Sample Project DDI">
+
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/sample-project-crabtree.png" alt="Sample Project Crabtree">
+
+## Misc Info
+Feel free to customize the automated script.
+You can check here how the script works.
+https://github.com/atfnico/magento2-docker/blob/master/install-script
+
+## Credits
+
+### Mark Shust's Docker Magento
+
+I have referenced Mark Shust’s Docker Configuration for creating the automated script for installing Magento projects.
+https://github.com/markshust/docker-magento
+
+You can visit and review other functionalities, like the <a href="https://github.com/markshust/docker-magento#custom-cli-commands" target="_blank">Custom CLI Commands</a>.
