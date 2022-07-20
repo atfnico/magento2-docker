@@ -33,6 +33,7 @@ open https://magento.test
 ```bash
 # Download the magento2-docker from the below git repo 
 # https://github.com/atfnico/magento2-docker
+# Skip this if you have already downloaded it before
 cd ~/sites
 git clone https://github.com/atfnico/magento2-docker.git
 
