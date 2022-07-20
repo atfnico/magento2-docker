@@ -103,6 +103,20 @@ bin/restart
 If you have problem on configuring multi-store instances, you can check this video on what have you missed.
 <a href="https://courses.m.academy/courses/set-up-magento-2-development-environment-docker/lectures/14780970" target="_blank">Configure multi-store instances in Docker with Nginx</a>
 
+#### Uploading pub media to Docker container
+Copy the extracted pub media files to src/pub, then run below command to copy it to the container.
+```bash
+bin/copytocontainer pub/
+```
+For more info of managing files & folders within Docker containers, you can watch this video.
+https://courses.m.academy/courses/set-up-magento-2-development-environment-docker/lectures/9064338
+
+#### Accessing custom executable php in browser
+If you want to access executable php in the browser, you can add it to src/pub.
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/custom-pub-php.png" alt="custom-pub-php">
+Then configured it in src/nginx.conf.
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/custom-pub-php-nginx-conf.png" alt="custom-pub-php-nginx-conf">
+
 ## Misc Info
 Feel free to customize the automated script.
 You can check here how the script works.
@@ -116,3 +130,6 @@ I have referenced Mark Shust’s Docker Configuration for creating the automated
 https://github.com/markshust/docker-magento
 
 You can visit and review other functionalities, like the <a href="https://github.com/markshust/docker-magento#custom-cli-commands" target="_blank">Custom CLI Commands</a>.
+
+I recommend also to be familiarized on how Docker Magento works.
+Visit this course by Mark Shust for more info, https://courses.m.academy/courses/set-up-magento-2-development-environment-docker/.
