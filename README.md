@@ -38,11 +38,11 @@ git clone https://github.com/atfnico/magento2-docker.git
 
 # Run ATF Docker automated script
 # To see the syntax for help, run:
-~/sites/docker-magento/install-script -h
+~/sites/magento2-docker/install-script -h
 
 # You should have already a copy of Magento 2 env.php and DB sql file */
 # Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}
-~/sites/docker-magento/install-script crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
+~/sites/magento2-docker/install-script crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
 ```
 
 #### Sample Project Total Execution Time
