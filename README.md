@@ -51,7 +51,7 @@ git clone https://github.com/atfnico/magento2-docker.git
 To setup multi-store instances. For example, crabtree project has 4 stores/URLs.
 
 These are the three files need to be configured.
-- docker-compose.dev.yml
+- `docker-compose.dev.yml`
 ```bash
 # Rename first file path of nginx.conf.sample to nginx.conf
 services:
@@ -69,8 +69,7 @@ services:
       - ./src/package.json.sample:/var/www/html/package.json:cached
 ```
 
-- images/nginx/conf/default.conf
-Update this file depending on the project configuration.
+- `images/nginx/conf/default.conf`: Update this file depending on the project configuration.
 
 Before
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/default.conf.png" alt="default.conf">
@@ -78,8 +77,7 @@ Before
 After
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/crabtree-default.conf.png" alt="crabtree-default.conf">
 
-- src/nginx.conf
-Last, add these lines on nginx.conf
+- `src/nginx.conf`: Last, add these lines on nginx.conf
 ```bash
 # START - Multisite customization
 fastcgi_param MAGE_RUN_TYPE $MAGE_RUN_TYPE;
@@ -100,18 +98,18 @@ bin/restart
 ```
 
 If you have problem on configuring multi-store instances, you can check this video on what have you missed.
-<a href="ttps://courses.m.academy/courses/set-up-magento-2-development-environment-docker/lectures/14780970" target="_blank">Configure multi-store instances in Docker with Nginx</a>
+<a href="https://courses.m.academy/courses/set-up-magento-2-development-environment-docker/lectures/14780970" target="_blank">Configure multi-store instances in Docker with Nginx</a>
 
 ## Misc Info
 Feel free to customize the automated script.
 You can check here how the script works.
-<a href="https://github.com/atfnico/magento2-docker/blob/master/install-script" target="_blank">https://github.com/atfnico/magento2-docker/blob/master/install-script</a>
+https://github.com/atfnico/magento2-docker/blob/master/install-script
 
 ## Credits
 
 ### Mark Shust's Docker Magento
 
 I have referenced Mark Shust’s Docker Configuration for creating the automated script for installing Magento projects.
-<a href="https://github.com/markshust/docker-magento" target="_blank">https://github.com/markshust/docker-magento</a>
+https://github.com/markshust/docker-magento
 
 You can visit and review other functionalities, like the <a href="https://github.com/markshust/docker-magento#custom-cli-commands" target="_blank">Custom CLI Commands</a>.
