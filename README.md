@@ -40,7 +40,9 @@ git clone https://github.com/atfnico/magento2-docker.git
 # To see the syntax for help, run:
 ~/sites/magento2-docker/install-script -h
 
-# You should have already a copy of Magento 2 env.php and DB sql file */
+# You should have already a copy of Magento 2 env.php and DB sql file.
+# Those files can be downloaded from the Project's Development Environment Setup
+# For example, https://abovethefray.atlassian.net/wiki/spaces/HSD/pages/2336620607/Development+Environment+Setup
 # Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}
 ~/sites/magento2-docker/install-script crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
 ```
@@ -123,6 +125,23 @@ Then run, `bin/restart`.
 Feel free to customize the automated script.
 You can check here how the script works.
 https://github.com/atfnico/magento2-docker/blob/master/install-script
+
+## Development
+
+#### Pushing code changes to repository
+We can do this by accessing the src folder and do the git commands there.
+
+For example,
+```bash
+cd src;
+git status;
+git add app/;
+git commit -m "initial commint";
+git push origin master;
+```
+
+#### Coding with Text Editor
+I recommend to point the directory to src folder when using a text editor or IDE such as VS Code.
 
 ## Credits
 
