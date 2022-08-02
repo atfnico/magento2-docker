@@ -79,7 +79,15 @@ else
     bin/composer install -v
 
     echo "Copying files from container to host after composer install..."
-    bin/copyfromcontainer app/code app/design/ app/etc/ composer.json composer.lock grunt-config.json.sample Gruntfile.js.sample nginx.conf.sample package.json.sample
+    bin/copyfromcontainer app/code 
+    bin/copyfromcontainer app/design/ 
+    bin/copyfromcontainer app/etc/ 
+    bin/copyfromcontainer composer.json 
+    bin/copyfromcontainer composer.lock 
+    bin/copyfromcontainer grunt-config.json.sample 
+    bin/copyfromcontainer Gruntfile.js.sample 
+    bin/copyfromcontainer nginx.conf.sample 
+    bin/copyfromcontainer package.json.sample
 
     echo "Create a DNS host entry and setup Magento base url..."
     if ! grep -q "$DOMAIN" /etc/hosts; then
