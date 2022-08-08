@@ -1,0 +1,91 @@
+#!/bin/bash
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+   # Display Help
+   echo
+   echo "Syntax: create-vhost {site_name}"
+   echo
+}
+
+############################################################
+############################################################
+# Main program                                             #
+############################################################
+############################################################
+############################################################
+# Process the input options. Add options as needed.        #
+############################################################
+# Get the options
+while getopts ":h" option; do
+    case $option in
+      h) # display Help
+        Help
+        exit;;
+    esac
+done
+
+if [ "$#" -ne 1 ]; then
+    Help
+else
+    SITENAME=$1
+    PHP_VERSION=7.4
+
+    dom_regex="^([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$"
+
+    if [[ "$SITENAME" =~ $dom_regex ]] 
+    then
+        echo "$SITENAME is a valid domain"
+    else
+        echo "$SITENAME is not a valid domain"
+        exit 1
+    fi
+
+    echo "Creating SITENAME directory in" ~/sites/$SITENAME "..."
+    echo
+    rm -rf ~/sites/$SITENAME/* && rm -rf ~/sites/$SITENAME/
+    mkdir -p ~/sites/$SITENAME
+
+    echo "Moving to SITENAME directory in" ~/sites/$SITENAME "..."
+    echo
+    cd ~/sites/$SITENAME
+    curl -s https://raw.githubusercontent.com/markshust/magento2-docker/master/lib/template | bash
+
+    cp -R ~/sites/magento2-docker/support-files/images ~/sites/$SITENAME/
+    cp ~/sites/magento2-docker/support-files/docker-compose.yml ~/sites/$SITENAME/
+    cp ~/sites/magento2-docker/support-files/docker-compose.dev.yml ~/sites/$SITENAME/
+    sed -i -e "s/PHP_VERSION/$PHP_VERSION/g" ~/sites/$SITENAME/docker-compose.yml
+
+    mkdir -p ~/sites/$SITENAME/src/
+    cp ~/sites/magento2-docker/support-files/src/index.php ~/sites/$SITENAME/src/
+    cp ~/sites/magento2-docker/support-files/src/nginx.conf ~/sites/$SITENAME/src/
+
+    echo "Start some containers..."
+    bin/stopall
+    docker-compose -f docker-compose.yml up -d --remove-orphans
+
+    bin/copytocontainer index.php
+
+    echo "Create a DNS host entry and setup Magento base url..."
+    if ! grep -q "$SITENAME" /etc/hosts; then
+        echo "Your system password is needed to add an entry to /etc/hosts..."
+        echo "127.0.0.1 ::1 $SITENAME" | sudo tee -a /etc/hosts
+    fi
+
+    echo "Generating SSL certificate..."
+    bin/setup-ssl "$SITENAME"
+
+    mv .vscode src/
+
+    echo "================================"
+    echo "Site $SITENAME is now created"
+    echo "URL: https://$SITENAME"
+    echo
+    echo "clone your project at ~/sites/$SITENAME/src by running the command below"
+    echo
+    echo "git clone https://{user}@bitbucket.org/abovethefray/{project}.git ~/sites/$SITENAME/src"
+    echo
+fi

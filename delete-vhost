@@ -1,0 +1,64 @@
+#!/bin/bash
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+   # Display Help
+   echo
+   echo "Syntax: delete-vhost {site_name}"
+   echo
+}
+
+############################################################
+############################################################
+# Main program                                             #
+############################################################
+############################################################
+############################################################
+# Process the input options. Add options as needed.        #
+############################################################
+# Get the options
+while getopts ":h" option; do
+    case $option in
+      h) # display Help
+        Help
+        exit;;
+    esac
+done
+
+if [ "$#" -ne 1 ]; then
+    Help
+else
+    SITENAME=$1
+
+    dom_regex="^([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$"
+
+    if [[ "$SITENAME" =~ $dom_regex ]] 
+    then
+        echo "$SITENAME is a valid domain"
+    else
+        echo "$SITENAME is not a valid domain"
+        exit 1
+    fi
+
+    echo "*** BACKUP FIRST YOUR FILES AT ~/sites/$SITENAME/src ***"
+    read -p "Did you already made a backup outside of /data/$SITENAME? type 'Y' if yes and 'N' if not " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+    fi
+
+    cd ~/sites/$SITENAME
+
+    bin/stopall
+    bin/removeall
+
+    rm -rf ~/sites/$SITENAME/* && rm -rf ~/sites/$SITENAME/
+
+    echo "================================"
+    echo "~/sites/$SITENAME/ is now deleted"
+    echo "Site $SITENAME is now deleted"
+fi

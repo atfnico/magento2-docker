@@ -122,10 +122,20 @@ If you want to access executable php in the browser, you can add it to src/pub.
 Configured it in src/nginx.conf.
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/custom-pub-php-nginx-conf.png" alt="custom-pub-php-nginx-conf">
 Then run, `bin/restart`.
+
 ## Misc Info
 Feel free to customize the automated script.
 You can check here how the script works.
 https://github.com/atfnico/magento2-docker/blob/master/install-script
+
+### Check docker logs
+```bash
+bin/status
+```
+Check docker service status and get its name, then check the logs by running,
+```bash
+docker logs crabtree-phpfpm-1
+```
 
 ## Development
 
