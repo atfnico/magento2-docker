@@ -58,7 +58,19 @@ While running the automated docker setup, you will be prompt to ask the user pas
 #### Setting up Magento 2 Multi-store Instance
 To setup multi-store instances. For example, crabtree project has 4 stores/URLs.
 
-These are the three files need to be configured.
+These are the files need to be configured.
+- `docker-compose.yml`
+```bash
+# Comment out "build: images/nginx" and then comment "build: markoshust/magento-nginx:1.18-7"
+services:
+  app:
+    build: markoshust/magento-nginx:1.18-7
+    # build: images/nginx
+    ports:
+      - "80:8000"
+      - "443:8443"
+```
+
 - `docker-compose.dev.yml`
 ```bash
 # Rename first file path of nginx.conf.sample to nginx.conf
@@ -95,14 +107,15 @@ fastcgi_param MAGE_RUN_CODE $MAGE_RUN_CODE;
 
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/project-nginx.conf.png" alt="nginx.conf">
 
-After updating the files, register SSL to added stores/URLs.
+After updating the files, register SSL to added stores/URLs. Don't forget also to set up this in Magento URL configuration.
 ```bash
 bin/setup-ssl highspiritsliquor.test knb.test crabtreebrand.test chocmo.test
 ```
 
-Then restart container to apply the changes.
+Then restart container and clean cache to make sure it will apply the changes.
 ```bash
-bin/restart
+bin/restart;
+bin/cache-clean;
 ```
 
 If you have problem on configuring multi-store instances, you can check this video on what have you missed.
