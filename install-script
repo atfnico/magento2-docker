@@ -47,7 +47,7 @@ else
     echo "Moving to project directory in" ~/sites/$PROJECT "..."
     echo
     cd ~/sites/$PROJECT
-    curl -s https://raw.githubusercontent.com/markshust/magento2-docker/master/lib/template | bash
+    curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash
 
     cp -R ~/sites/magento2-docker/support-files/images ~/sites/$PROJECT/
     cp ~/sites/magento2-docker/support-files/docker-compose.yml ~/sites/$PROJECT/

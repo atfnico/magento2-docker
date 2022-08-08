@@ -52,7 +52,7 @@ else
     echo "Moving to SITENAME directory in" ~/sites/$SITENAME "..."
     echo
     cd ~/sites/$SITENAME
-    curl -s https://raw.githubusercontent.com/markshust/magento2-docker/master/lib/template | bash
+    curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash
 
     cp -R ~/sites/magento2-docker/support-files/images ~/sites/$SITENAME/
     cp ~/sites/magento2-docker/support-files/docker-compose.yml ~/sites/$SITENAME/
