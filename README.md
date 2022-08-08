@@ -112,9 +112,10 @@ After updating the files, register SSL to added stores/URLs. Don't forget also t
 bin/setup-ssl highspiritsliquor.test knb.test crabtreebrand.test chocmo.test
 ```
 
-Then restart container and clean cache to make sure it will apply the changes.
+Then stop, rebuild container and clean cache to make sure it will apply the changes.
 ```bash
-bin/restart;
+bin/stop;
+docker-compose build --no-cache --pull;
 bin/cache-clean;
 ```
 
