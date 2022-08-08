@@ -65,7 +65,7 @@ else
 
     echo "Start some containers..."
     bin/stopall
-    docker-compose -f docker-compose.yml up -d --remove-orphans
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans "$@"
 
     bin/copytocontainer index.php
 

@@ -59,17 +59,6 @@ While running the automated docker setup, you will be prompt to ask the user pas
 To setup multi-store instances. For example, crabtree project has 4 stores/URLs.
 
 These are the files need to be configured.
-- `docker-compose.yml`
-```bash
-# Comment out "build: images/nginx" and then comment "build: markoshust/magento-nginx:1.18-7"
-services:
-  app:
-    build: markoshust/magento-nginx:1.18-7
-    # build: images/nginx
-    ports:
-      - "80:8000"
-      - "443:8443"
-```
 
 - `docker-compose.dev.yml`
 ```bash

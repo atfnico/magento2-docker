@@ -10,8 +10,7 @@ version: "3"
 
 services:
   app:
-    build: markoshust/magento-nginx:1.18-7
-    # build: images/nginx
+    build: images/nginx
     ports:
       - "80:8000"
       - "443:8443"
