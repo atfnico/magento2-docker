@@ -39,13 +39,13 @@ git clone https://github.com/atfnico/magento2-docker.git
 
 # Run ATF Docker automated script
 # To see the syntax for help, run:
-~/sites/magento2-docker/install-script -h
+~/sites/magento2-docker/onelinesetup -h
 
 # You should have already a copy of Magento 2 env.php and DB sql file.
 # Those files can be downloaded from the Project's Development Environment Setup
 # For example, https://abovethefray.atlassian.net/wiki/spaces/HSD/pages/2336620607/Development+Environment+Setup
-# Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}
-~/sites/magento2-docker/install-script crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
+# Syntax: onelinesetup {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}
+~/sites/magento2-docker/onelinesetup crabtree highspiritsliquor.test nico-atf 7.4 Dev ~/Downloads/ATF/Crabtree/env.php ~/Downloads/ATF/Crabtree/crabtree.sql
 ```
 While running the automated docker setup, you will be prompt to ask the user password.
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/prompting-user-password.png" alt="prompting-user-password">
@@ -129,7 +129,7 @@ Then run, `bin/restart`.
 ## Misc Info
 Feel free to customize the automated script.
 You can check here how the script works.
-https://github.com/atfnico/magento2-docker/blob/master/install-script
+https://github.com/atfnico/magento2-docker/blob/master/onelinesetup
 
 ### Check docker logs
 ```bash
