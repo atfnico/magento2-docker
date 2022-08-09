@@ -7,7 +7,7 @@ Help()
 {
    # Display Help
    echo
-   echo "Syntax: install-script {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}"
+   echo "Syntax: onelinesetup {project_name} {domain_name} {bitbucket_user} {php_version} {git_branch} {env_file} {db_file}"
    echo
 }
 
