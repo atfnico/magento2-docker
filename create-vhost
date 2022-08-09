@@ -59,15 +59,9 @@ else
     cp ~/sites/magento2-docker/support-files/docker-compose.dev.yml ~/sites/$SITENAME/
     sed -i -e "s/PHP_VERSION/$PHP_VERSION/g" ~/sites/$SITENAME/docker-compose.yml
 
-    mkdir -p ~/sites/$SITENAME/src/
-    cp ~/sites/magento2-docker/support-files/src/index.php ~/sites/$SITENAME/src/
-    cp ~/sites/magento2-docker/support-files/src/nginx.conf ~/sites/$SITENAME/src/
-
     echo "Start some containers..."
     bin/stopall
-    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans "$@"
-
-    bin/copytocontainer index.php
+    docker-compose -f docker-compose.yml up -d --remove-orphans
 
     echo "Create a DNS host entry and setup Magento base url..."
     if ! grep -q "$SITENAME" /etc/hosts; then
@@ -77,8 +71,6 @@ else
 
     echo "Generating SSL certificate..."
     bin/setup-ssl "$SITENAME"
-
-    mv .vscode src/
 
     echo "================================"
     echo "Site $SITENAME is now created"

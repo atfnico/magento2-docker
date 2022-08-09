@@ -55,6 +55,82 @@ While running the automated docker setup, you will be prompt to ask the user pas
 
 <img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/sample-project-crabtree.png" alt="Sample Project Crabtree">
 
+#### Manual Setup (Existing Project)
+This is an alternative when you cannot set up your project using the onelinesetup.
+Because sometimes we encountered a problem especially on composer installation.
+
+```bash
+# Run create vhost
+~/sites/magento2-docker/create-vhost $DOMAIN
+
+# After running create vhost, next will be setting up Magento instance
+
+# Clone project repository
+cd ~/sites/$DOMAIN;
+git clone https://$BITBUCKET_USER@bitbucket.org/abovethefray/$PROJECT.git src;
+
+# Verify git and switch to the branch you need to work
+cd src;
+git checkout develop;
+
+# Then go back to project's docker directory
+cd ../;
+
+# Copy env file
+mkdir -p src/app/etc/ && cp $ENV_FILE src/app/etc
+
+# Make sure to configure project's nginx.conf
+cp src/nginx.conf.sample src/nginx.conf
+
+# Copy files downloaded from repo, host to container
+bin/copytocontainer --all
+
+# Trigger composer install to update latest package based 
+# on the composer.json in the switched branch
+bin/composer install -v
+
+# Copying files from container to host after composer install
+bin/copyfromcontainer --all
+
+# Import the db to docker instance
+bin/mysql < $DB_FILE
+
+# Import app-specific environment settings
+bin/clinotty bin/magento app:config:import
+
+# Update elasticsearch configuration saved from the db - core_config_data
+bin/mysql < ~/sites/magento2-docker/support-files/update-db.sql
+
+# Run Magento CLI commands
+bin/clinotty rm -rf generated/code/*
+bin/clinotty bin/magento setup:upgrade
+bin/clinotty bin/magento setup:di:compile
+bin/clinotty bin/magento setup:static-content:deploy -f -j 10
+
+# Re-indexing with Elasticsearch
+bin/clinotty bin/magento indexer:reindex
+
+# Update Magento base url
+bin/clinotty bin/magento config:set web/secure/base_url https://"$DOMAIN"/
+bin/clinotty bin/magento config:set web/unsecure/base_url https://"$DOMAIN"/
+
+# Clearing the cache to apply updates
+bin/clinotty bin/magento cache:flush
+
+# Turning on developer mode
+bin/clinotty bin/magento deploy:mode:set developer
+
+mv .vscode src/
+
+# Restart containers to apply changes
+bin/restart
+```
+
+You can delete also a vhost site (including its images and containers) by running this command.
+```bash
+~/sites/magento2-docker/delete-vhost $DOMAIN
+```
+
 #### Setting up Magento 2 Multi-store Instance
 To setup multi-store instances. For example, crabtree project has 4 stores/URLs.
 
