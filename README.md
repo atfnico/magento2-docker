@@ -6,7 +6,7 @@ Before setting up a Magento 2 development environment with Docker, make sure tha
 
 ```bash
 # Create your project directory then go into it:
-mkdir -p ~/Sites/magento
+mkdir -p ~/sites/magento.test
 cd $_
 
 # Download the Docker Compose template:
