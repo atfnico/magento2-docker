@@ -233,6 +233,66 @@ git push origin master;
 #### Coding with Text Editor
 I recommend to point the directory to src folder when using a text editor or IDE such as VS Code.
 
+#### Magento Coding Standards
+You can install also Magento 2 PHP Sniffer in your project. There are 2 ways to do that.
+
+1) Install it directly to the project.
+  - Add the following first on project's `composer.json`.
+
+```json
+"scripts": {
+    "post-install-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ],
+    "post-update-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ]
+}
+```
+
+  - Then run composer install command.
+```bash
+bin/composer require --dev magento/magento-coding-standard --version
+```
+
+  - Sometimes, there will be conflicts on package version, I fix that by adding specific version on Magento Coding Standard package. For example,
+```bash
+bin/composer require --dev magento/magento-coding-standard:21 --version
+```
+
+  - Verify the installation by running.
+```bash
+bin/cli vendor/bin/phpcs -i;
+```
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/sample-magento-coding-standard-cli.png" alt="sample-magento-coding-standard-cli">
+
+
+2) Installing it inside docker container.
+  - Go inside docker container, by running.
+```bash
+bin/bash
+```
+
+  - When you are inside of the virtual docker container, install the Magento Coding Standard package on the same level of html directory.
+<img src="https://raw.githubusercontent.com/atfnico/magento2-docker/master/docs/sample-docker-container-magento-coding-standard.png" alt="sample-docker-container-magento-coding-standard">
+
+  - Clone the package and install its dependencies by running the following.
+```bash
+git clone https://github.com/magento/magento-coding-standard.git;
+cd magento-coding-standard;
+composer install;
+```
+
+  - Finally, exit to docker container by running `exit`, then to verify the installation just run.
+```bash
+bin/cli ../magento-coding-standard/vendor/bin/phpcs -i;
+```
+
+  - Usage will be.
+```bash
+bin/cli ../magento-coding-standard/vendor/bin/phpcs --standard=Magento2 app/code/ATF;
+``` 
+
 ## Credits
 
 ### Mark Shust's Docker Magento
