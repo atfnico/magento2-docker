@@ -40,13 +40,6 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
 
-  # To access, go to http://localhost:8080/
-  adminer:
-    image: adminer
-    restart: always  
-    ports:
-      - 8080:8080
-
   redis:
     image: redis:6.2-alpine
     ports:

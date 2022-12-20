@@ -21,3 +21,10 @@ services:
 
   phpfpm:
     volumes: *appvolumes
+
+  # To access, go to http://localhost:8080/
+  adminer:
+    image: adminer
+    restart: always  
+    ports:
+      - 8080:8080
